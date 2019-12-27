@@ -24,6 +24,7 @@
     <v-col>
       <v-textarea rows="5" solo name="input-7-4" label="コメント"></v-textarea>
     </v-col>
+    <v-btn>登録</v-btn>
   </v-layout>
 </template>
 
