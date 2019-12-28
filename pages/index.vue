@@ -9,6 +9,22 @@
       </label>
     </v-flex>
 
+    <v-col>
+      <v-textarea rows="1" solo name="input-7-4" label="店名"></v-textarea>
+    </v-col>
+    <v-col class="d-flex" cols="12" sm="6" no-resize="false">
+      <v-select :items="value" label="美味しさ" solo></v-select>
+    </v-col>
+    <v-col class="d-flex" cols="12" sm="6">
+      <v-select :items="soup_janl" label="スープジャンル" solo></v-select>
+    </v-col>
+    <v-col class="d-flex" cols="12" sm="6">
+      <v-select :items="men_hutosa" label="麵の太さ" solo></v-select>
+    </v-col>
+    <v-col>
+      <v-textarea rows="5" solo name="input-7-4" label="コメント"></v-textarea>
+    </v-col>
+    <v-btn>登録</v-btn>
   </v-layout>
 </template>
 
@@ -17,6 +33,11 @@ import Logo from "~/components/Logo.vue";
 import VuetifyLogo from "~/components/VuetifyLogo.vue";
 
 export default {
+  data: () => ({
+    soup_janl: ["醤油", "豚骨", "味噌", "魚介", "鳥白湯", "まぜそば", "つけ麺"],
+    men_hutosa: ["極細麵", "細めん", "中太麵", "ちぢれ麵", "太麺"],
+    value: [1, 2, 3, 4, 5]
+  }),
   components: {
     Logo,
     VuetifyLogo
