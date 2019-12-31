@@ -10,33 +10,64 @@
     </v-flex>
 
     <v-col>
-      <v-textarea rows="1" solo name="input-7-4" label="店名"></v-textarea>
+      <v-textarea
+        rows="1"
+        solo
+        name="input-7-4"
+        label="店名"
+        v-model="name"
+      ></v-textarea>
     </v-col>
     <v-col class="d-flex" cols="12" sm="6" no-resize="false">
-      <v-select :items="value" label="美味しさ" solo></v-select>
+      <v-select :items="value" label="美味しさ" solo v-model="value"></v-select>
     </v-col>
     <v-col class="d-flex" cols="12" sm="6">
-      <v-select :items="soup_janl" label="スープジャンル" solo></v-select>
+      <v-select
+        :items="soup_janl"
+        label="スープジャンル"
+        solo
+        v-model="store_value"
+      ></v-select>
     </v-col>
     <v-col class="d-flex" cols="12" sm="6">
-      <v-select :items="men_hutosa" label="麵の太さ" solo></v-select>
+      <v-select
+        :items="men_hutosa"
+        label="麵の太さ"
+        solo
+        v-model="men"
+      ></v-select>
     </v-col>
     <v-col>
-      <v-textarea rows="5" solo name="input-7-4" label="コメント"></v-textarea>
+      <v-textarea
+        rows="5"
+        solo
+        name="input-7-4"
+        label="コメント"
+        v-model="comment"
+      ></v-textarea>
     </v-col>
-    <v-btn>登録</v-btn>
+    <v-btn @click="send">登録</v-btn>
   </v-layout>
 </template>
 
 <script>
 import Logo from "~/components/Logo.vue";
 import VuetifyLogo from "~/components/VuetifyLogo.vue";
+import firebase from "~/plugins/firebase";
+
+var db = firebase.firestore();
 
 export default {
   data: () => ({
+    name: "",
+    soup: "",
+    men: "",
+    store_value: "",
+    comment: "",
+    file:"",
     soup_janl: ["醤油", "豚骨", "味噌", "魚介", "鳥白湯", "まぜそば", "つけ麺"],
     men_hutosa: ["極細麵", "細めん", "中太麵", "ちぢれ麵", "太麺"],
-    value: [1, 2, 3, 4, 5]
+    value: ["1", "2", "3", "4", "5"]
   }),
   components: {
     Logo,
@@ -46,7 +77,7 @@ export default {
     photo: function(element) {
       var element = document.getElementById("hoge");
       // 読み込むファイル
-      var file = element.files[0]; // 1つ目のファイル
+      this.file = element.files[0]; // 1つ目のファイル
       // FileReaderを作成
       var fileReader = new FileReader();
       // 読み込み完了時のイベント
@@ -55,7 +86,21 @@ export default {
         img.style.backgroundImage = "url(" + element.target.result + ")";
       };
       // 読み込みを実行
-      fileReader.readAsDataURL(file);
+      fileReader.readAsDataURL(this.file);
+    },
+    send: function() {
+      db.collection("ra-men").add({
+        name: this.name,
+        men: this.men,
+        comment: this.comment,
+        soup: this.soup,
+        value: this.value
+      });
+      var fileName = this.file.name;
+      var storageRef = firebase.storage().ref(fileName);
+      storageRef.put(this.file).then(function(snapshot) {
+        console.log("uploda");
+      });
     }
   }
 };
