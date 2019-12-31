@@ -18,7 +18,10 @@
 </template>
 
 <script>
+import firebase from "~/plugins/firebase";
 import Bottom from "~/components/bottom.vue";
+
+var db = firebase.firestore();
 
 export default {
   data () {
