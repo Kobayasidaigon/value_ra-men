@@ -2,12 +2,12 @@
   <v-item-group>
     <v-container>
       <v-row>
-        <v-col v-for="n in 3" :key="n" cols="12" md="4">
+        <v-col v-for="n in this.list" :key="n" cols="12" md="4">
           <v-item>
             <v-card class="d-flex align-center" dark height="300">
               <div class="list">
                 <div class="title">
-                  <p>aiueo</p>
+                  <p>{{n.name}}</p>
                 </div>
               </div>
             </v-card>
@@ -19,6 +19,7 @@
 </template>
 <script>
 import firebase from "~/plugins/firebase";
+import { darkblue } from 'color-name';
 
 var db = firebase.firestore();
 export default {
@@ -26,11 +27,14 @@ export default {
     list: [];
   },
   created() {
-    let store_list = db.collection("ra-men").get().then((querySnapshot)=>{
+    this.store = []
+    db.collection("ra-men").get().then((querySnapshot)=>{
       querySnapshot.forEach((doc)=>{
-        this.list = doc.data()
-      });
-    });
+        this.store.push(doc.data());
+        console.log(doc.data());
+      })
+    })
+    this.list = this.store
   }
 };
 </script>
@@ -46,5 +50,6 @@ export default {
   color: black;
   position: absolute;
   bottom: 0;
+  padding-left:20px; 
 }
 </style>
