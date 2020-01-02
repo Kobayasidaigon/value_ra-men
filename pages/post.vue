@@ -46,7 +46,7 @@
         v-model="comment"
       ></v-textarea>
     </v-col>
-    <v-btn @click="send">登録</v-btn>
+    <v-btn  @click="send"  :disabled="isTestDisabled" >登録</v-btn>
   </v-layout>
 </template>
 
@@ -58,17 +58,20 @@ import firebase from "~/plugins/firebase";
 var db = firebase.firestore();
 
 export default {
-  data: () => ({
-    name: "",
-    soup: "",
-    men: "",
-    store_value: "",
-    comment: "",
-    file:"",
-    soup_janl: ["醤油", "豚骨", "味噌", "魚介", "鳥白湯", "まぜそば", "つけ麺"],
-    men_hutosa: ["極細麵", "細めん", "中太麵", "ちぢれ麵", "太麺"],
-    value: ["1", "2", "3", "4", "5"]
-  }),
+  data: () => {
+    return{
+      name: "",
+      soup: "",
+      men: "",
+      store_value: "",
+      comment: "",
+      file: "",
+      soup_janl: ["醤油", "豚骨", "味噌", "魚介", "鳥白湯", "まぜそば", "つけ麺"],
+      men_hutosa: ["極細麵", "細めん", "中太麵", "ちぢれ麵", "太麺"],
+      value: ["1", "2", "3", "4", "5"],
+      isTestDisabled: true,
+    };
+  },
   components: {
     Logo,
     VuetifyLogo
@@ -89,18 +92,28 @@ export default {
       fileReader.readAsDataURL(this.file);
     },
     send: function() {
-      db.collection("ra-men").add({
+      const store = {
         name: this.name,
         men: this.men,
         comment: this.comment,
         soup: this.soup,
         value: this.value
+      };
+      db.collection("ra-men").add(store).then(doc=>{
+        db.collection("ra-men").doc(doc.id).update({
+          id:doc.id
+        })
       });
       var fileName = this.file.name;
       var storageRef = firebase.storage().ref(fileName);
       storageRef.put(this.file).then(function(snapshot) {
         console.log("uploda");
       });
+    }
+  },
+  computed:{
+    disable_btn:function(){
+      
     }
   }
 };
