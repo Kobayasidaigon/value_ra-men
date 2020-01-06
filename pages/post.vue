@@ -54,7 +54,7 @@
 import Logo from "~/components/Logo.vue";
 import VuetifyLogo from "~/components/VuetifyLogo.vue";
 import firebase from "~/plugins/firebase";
-
+import uuid from "uuid"
 var db = firebase.firestore();
 
 export default {
@@ -69,7 +69,7 @@ export default {
       soup_janl: ["醤油", "豚骨", "味噌", "魚介", "鳥白湯", "まぜそば", "つけ麺"],
       men_hutosa: ["極細麵", "細めん", "中太麵", "ちぢれ麵", "太麺"],
       value: ["1", "2", "3", "4", "5"],
-      isTestDisabled: true,
+      isTestDisabled: false,
     };
   },
   components: {
@@ -99,15 +99,16 @@ export default {
         soup: this.soup,
         value: this.value
       };
-      db.collection("ra-men").add(store).then(doc=>{
-        db.collection("ra-men").doc(doc.id).update({
-          id:doc.id
-        })
-      });
-      var fileName = this.file.name;
-      var storageRef = firebase.storage().ref(fileName);
+      const fileName = this.file.name;
+      const id = uuid();
+      const storageRef = firebase.storage().ref(id);
       storageRef.put(this.file).then(function(snapshot) {
-        console.log("uploda");
+        db.collection("ra-men").add(store).then(doc=>{
+          db.collection("ra-men").doc(doc.id).update({
+            id:doc.id,
+            image:snapshot.ref.fullPath
+          })
+        });
       });
     }
   },
