@@ -2,12 +2,12 @@
   <v-item-group>
     <v-container>
       <v-row>
-        <v-col v-for="n in this.list" :key="n" cols="12" md="4">
+        <v-col v-for="store in this.list" :key="store.id" cols="12" md="4">
           <v-item>
             <v-card class="d-flex align-center" dark height="300">
               <div class="list">
                 <div class="title">
-                  <p>{{n.name}}</p>
+                  <nuxt-link :to="'/info?storeId='+ store.id">{{store.name}}</nuxt-link>
                 </div>
               </div>
             </v-card>
@@ -19,22 +19,24 @@
 </template>
 <script>
 import firebase from "~/plugins/firebase";
-import { darkblue } from 'color-name';
 
 var db = firebase.firestore();
 export default {
   data: () => {
-    list: [];
+    return {
+      list: []
+    };
   },
   created() {
-    this.store = []
-    db.collection("ra-men").get().then((querySnapshot)=>{
-      querySnapshot.forEach((doc)=>{
-        this.store.push(doc.data());
-        console.log(doc.data());
-      })
-    })
-    this.list = this.store
+    this.store = [];
+    db.collection("ra-men")
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          this.store.push(doc.data());
+        });
+      });
+    this.list = this.store;
   }
 };
 </script>
@@ -50,6 +52,6 @@ export default {
   color: black;
   position: absolute;
   bottom: 0;
-  padding-left:20px; 
+  padding-left: 20px;
 }
 </style>

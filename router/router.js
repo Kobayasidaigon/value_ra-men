@@ -13,6 +13,10 @@ export default new Router({
     {
       path: "/",
       name: ""
+    },
+    {
+      path: "/info",
+      name: "info"
     }
   ]
 });
