@@ -6,7 +6,10 @@
           <v-item>
             <v-card class="d-flex align-center" dark height="300">
               <div class="list">
-                <div class="title">
+                <div id="image" :style="'background: url(' + store.image + '); background-position: center; background-repeat: no-repeat; background-size: cover;'" name="vue-img">
+                  
+                </div>
+                 <div class="title">
                   <nuxt-link :to="'/info?storeId='+ store.id">{{store.name}}</nuxt-link>
                 </div>
               </div>
@@ -29,11 +32,13 @@ export default {
   },
   created() {
     this.store = [];
-    db.collection("ra-men")
-      .get()
-      .then(querySnapshot => {
+    db.collection("ra-men").get().then(querySnapshot => {
         querySnapshot.forEach(doc => {
-          this.store.push(doc.data());
+            var pushdata = doc.data()
+          firebase.storage().ref().child(doc.data().image).getDownloadURL().then((url) => {
+            pushdata.image = url
+            this.store.push(pushdata)
+          })
         });
       });
     this.list = this.store;
@@ -53,5 +58,11 @@ export default {
   position: absolute;
   bottom: 0;
   padding-left: 20px;
+}
+#image{
+  width:250px;
+  height:200px;
+  text-align: center;
+  margin: 10px auto 0px auto;
 }
 </style>

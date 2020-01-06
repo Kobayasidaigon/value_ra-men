@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto my-12" max-width="374">
-    <v-img height="250" src="https://cdn.vuetifyjs.com/images/cards/cooking.png"></v-img>
+    <v-img height="180" id="image" style="margin;0 auto;"></v-img>
 
     <v-card-title>{{this.store_name}}</v-card-title>
 
@@ -72,6 +72,9 @@ export default {
               self.men_selection = self.storeDetail.men
               self.soup_selection = self.storeDetail.soup
               self.value = self.storeDetail.value
+              firebase.storage().ref().child(list.data().image).getDownloadURL().then(url=>{
+                document.getElementById("image").style.backgroundImage = "url("+url+")";
+              })
             });
         });
     }
@@ -84,3 +87,8 @@ export default {
   })
 };
 </script>
+<style scoped>
+#image{
+
+}
+</style>
