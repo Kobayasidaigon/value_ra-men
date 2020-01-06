@@ -2,7 +2,7 @@
   <v-card class="mx-auto my-12" max-width="374">
     <v-img height="250" src="https://cdn.vuetifyjs.com/images/cards/cooking.png"></v-img>
 
-    <v-card-title>Cafe Badilico</v-card-title>
+    <v-card-title>{{this.store_name}}</v-card-title>
 
     <v-card-text>
       <v-row align="center" class="mx-0">
@@ -11,35 +11,28 @@
         <div class="grey--text ml-4">美味しさ</div>
       </v-row>
 
-      <div class="my-4 subtitle-1 black--text">$ • Italian, Cafe</div>
-
       <div>コメント</div>
+      <div>{{this.store_comment}}</div>
     </v-card-text>
 
     <v-divider class="mx-4"></v-divider>
 
-    <v-card-title>麵の太さ</v-card-title>
+    <v-card-title>スープ</v-card-title>
 
     <v-card-text>
-      <v-chip-group v-model="soup_selection" active-class="deep-purple accent-4 white--text" column>
-        <v-chip>醤油</v-chip>
-        <v-chip>豚骨</v-chip>
-        <v-chip>味噌</v-chip>
-        <v-chip>魚介</v-chip>
-        <v-chip>鳥白湯</v-chip>
-        <v-chip>まぜそば</v-chip>
-        <v-chip>つけ麺</v-chip>
+      <v-chip-group v-model="this.soup_selection" active-class="deep-purple accent-4 white--text" column>
+        <v-chip v-for="soup in soup_janl" :key="soup" :value="soup">
+          {{soup}}
+        </v-chip>
       </v-chip-group>
     </v-card-text>
 
-    <v-card-title>スープ</v-card-title>
+    <v-card-title>麵の太さ</v-card-title>
     <v-card-text>
-      <v-chip-group v-model="men_selection" active-class="deep-purple accent-4 white--text" column>
-        <v-chip>極細麵</v-chip>
-        <v-chip>細めん</v-chip>
-        <v-chip>中太麵</v-chip>
-        <v-chip>ちぢれ麵</v-chip>
-        <v-chip>太麺</v-chip>
+      <v-chip-group v-model="this.men_selection"  active-class="deep-purple accent-4 white--text" column>
+       <v-chip v-for="men in men_hutosa" :key="men" :value="men">
+         {{men}}
+       </v-chip>
       </v-chip-group>
     </v-card-text>
   </v-card>
@@ -52,7 +45,11 @@ export default {
   data: () => {
     return {
       list: [],
+      soup_janl: ["醤油", "豚骨", "味噌", "魚介", "鳥白湯", "まぜそば", "つけ麺"],
+      men_hutosa: ["極細麵", "細めん", "中太麵", "ちぢれ麵", "太麺"],
       storeId: "",
+      store_name:"",
+      store_comment:"",
       men_selection:"",
       soup_selection:"",
       value:""
@@ -70,15 +67,16 @@ export default {
             .get()
             .then(list => {
               self.storeDetail = list.data()
+              self.store_name = self.storeDetail.name,
+              self.store_comment = self.storeDetail.comment,
               self.men_selection = self.storeDetail.men
               self.soup_selection = self.storeDetail.soup
               self.value = self.storeDetail.value
             });
         });
-        console.log(this.soup_selection);
     }
   },
-  mounted() {
+  created() {
     this.get_store_info();
   },
   asyncData: context => ({
