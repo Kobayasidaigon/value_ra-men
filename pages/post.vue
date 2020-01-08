@@ -24,7 +24,7 @@
     <v-col>
       <v-textarea rows="5" solo name="input-7-4" label="コメント" v-model="comment"></v-textarea>
     </v-col>
-    <v-btn @click="send" :disabled="!disable_btn" style="margin-bottom:50px;">登録</v-btn>
+    <v-btn @click="send" :disabled="!disable_btn" style="margin-bottom:50px;" to="/">登録</v-btn>
   </v-layout>
 </template>
 
@@ -44,6 +44,7 @@ export default {
       store_value: "",
       comment: "",
       file: "",
+      id:"",
       soup_janl: [
         "醤油",
         "豚骨",
@@ -92,9 +93,7 @@ export default {
         db.collection("ra-men")
           .add(store)
           .then(doc => {
-            db.collection("ra-men")
-              .doc(doc.id)
-              .update({
+            db.collection("ra-men").doc(doc.id).update({
                 id: doc.id,
                 image: snapshot.ref.fullPath
               });
