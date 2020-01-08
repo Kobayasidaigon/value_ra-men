@@ -41,6 +41,7 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/pwa'
   ],
   /*
   ** vuetify module configuration
@@ -72,5 +73,15 @@ export default {
     */
     extend (config, ctx) {
     }
+  },
+  manifest:{  
+    name: "ラーメン",
+    title: "ラーメン",
+    lang: 'ja',
+    theme_color: "#529b58",
+    background_color: "#bde0c0",
+    display: "standalone",
+    scope: "/",
+    start_url: "/"
   }
 }
