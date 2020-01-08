@@ -25,7 +25,7 @@ var db = firebase.firestore();
 export default {
   data () {
     return {
-      title: 'Vuetify.js'
+      title: 'ラーメン'
     }
   },
   components:{
