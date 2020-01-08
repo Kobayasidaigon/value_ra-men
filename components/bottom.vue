@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-navigation　fixed　>
+  <v-bottom-navigation fixed>
     <v-btn >
       <span>ホーム</span>
       <v-icon>mdi-home</v-icon>
