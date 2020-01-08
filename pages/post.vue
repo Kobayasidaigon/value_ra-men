@@ -10,43 +10,21 @@
     </v-flex>
 
     <v-col>
-      <v-textarea
-        rows="1"
-        solo
-        name="input-7-4"
-        label="店名"
-        v-model="name"
-      ></v-textarea>
+      <v-textarea rows="1" solo name="input-7-4" label="店名" v-model="name"></v-textarea>
     </v-col>
     <v-col class="d-flex" cols="12" sm="6" no-resize="false">
       <v-select :items="value" label="美味しさ" solo v-model="value"></v-select>
     </v-col>
     <v-col class="d-flex" cols="12" sm="6">
-      <v-select
-        :items="soup_janl"
-        label="スープジャンル"
-        solo
-        v-model="store_value"
-      ></v-select>
+      <v-select :items="soup_janl" label="スープジャンル" solo v-model="soup"></v-select>
     </v-col>
     <v-col class="d-flex" cols="12" sm="6">
-      <v-select
-        :items="men_hutosa"
-        label="麵の太さ"
-        solo
-        v-model="men"
-      ></v-select>
+      <v-select :items="men_hutosa" label="麵の太さ" solo v-model="men"></v-select>
     </v-col>
     <v-col>
-      <v-textarea
-        rows="5"
-        solo
-        name="input-7-4"
-        label="コメント"
-        v-model="comment"
-      ></v-textarea>
+      <v-textarea rows="5" solo name="input-7-4" label="コメント" v-model="comment"></v-textarea>
     </v-col>
-    <v-btn  @click="send"  :disabled="isTestDisabled" >登録</v-btn>
+    <v-btn @click="send" :disabled="!disable_btn" style="margin-bottom:50px;" to="/">登録</v-btn>
   </v-layout>
 </template>
 
@@ -54,22 +32,31 @@
 import Logo from "~/components/Logo.vue";
 import VuetifyLogo from "~/components/VuetifyLogo.vue";
 import firebase from "~/plugins/firebase";
-import uuid from "uuid"
+import uuid from "uuid";
 var db = firebase.firestore();
 
 export default {
   data: () => {
-    return{
+    return {
       name: "",
       soup: "",
       men: "",
       store_value: "",
       comment: "",
       file: "",
-      soup_janl: ["醤油", "豚骨", "味噌", "魚介", "鳥白湯", "まぜそば", "つけ麺"],
+      id:"",
+      soup_janl: [
+        "醤油",
+        "豚骨",
+        "味噌",
+        "魚介",
+        "鳥白湯",
+        "まぜそば",
+        "つけ麺"
+      ],
       men_hutosa: ["極細麵", "細めん", "中太麵", "ちぢれ麵", "太麺"],
       value: ["1", "2", "3", "4", "5"],
-      isTestDisabled: false,
+      isTestDisabled: false
     };
   },
   components: {
@@ -103,18 +90,41 @@ export default {
       const id = uuid();
       const storageRef = firebase.storage().ref(id);
       storageRef.put(this.file).then(function(snapshot) {
-        db.collection("ra-men").add(store).then(doc=>{
-          db.collection("ra-men").doc(doc.id).update({
-            id:doc.id,
-            image:snapshot.ref.fullPath
-          })
-        });
+        db.collection("ra-men")
+          .add(store)
+          .then(doc => {
+            db.collection("ra-men").doc(doc.id).update({
+                id: doc.id,
+                image: snapshot.ref.fullPath
+              });
+          });
       });
     }
   },
-  computed:{
-    disable_btn:function(){
-      
+  computed: {
+    disable_btn: function() {
+      return (
+        this.un_disable_name &&
+        this.un_disable_value &&
+        this.un_disable_soup &&
+        this.un_disable_men &&
+        this.un_disable_comment
+      );
+    },
+    un_disable_name: function() {
+      return this.name != "";
+    },
+    un_disable_value: function() {
+      return this.value != "";
+    },
+    un_disable_soup: function() {
+      return this.soup != "";
+    },
+    un_disable_men: function() {
+      return this.men != "";
+    },
+    un_disable_comment: function() {
+      return this.comment != "";
     }
   }
 };
